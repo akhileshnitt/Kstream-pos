@@ -19,6 +19,7 @@ import guru.learningjournal.kafka.examples.types.HadoopRecord;
 import guru.learningjournal.kafka.examples.types.LineItem;
 import guru.learningjournal.kafka.examples.types.Notification;
 import guru.learningjournal.kafka.examples.types.PosInvoice;
+import guru.learningjournal.kafka.examples.types.StoreNotification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,5 +92,11 @@ class RecordBuilder {
                 .withCustomerCardNo(invoice.getCustomerCardNo())
                 .withTotalAmount(invoice.getTotalAmount())
                 .withEarnedLoyaltyPoints(invoice.getTotalAmount() * AppConfigs.LOYALTY_FACTOR);
+    }
+
+    public static StoreNotification getStoreTotal(PosInvoice invoice) {
+        return new StoreNotification()
+                .withTotalAmount(invoice.getTotalAmount())
+                .witStoreId(invoice.getStoreID());
     }
 }

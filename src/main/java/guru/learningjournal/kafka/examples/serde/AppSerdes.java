@@ -18,6 +18,7 @@ package guru.learningjournal.kafka.examples.serde;
 import guru.learningjournal.kafka.examples.types.HadoopRecord;
 import guru.learningjournal.kafka.examples.types.Notification;
 import guru.learningjournal.kafka.examples.types.PosInvoice;
+import guru.learningjournal.kafka.examples.types.StoreNotification;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 
@@ -80,5 +81,19 @@ public class AppSerdes extends Serdes {
         serde.configure(serdeConfigs, false);
 
         return serde;
+    }
+
+    public static Serde<StoreNotification> StoreNotification(){
+        StoreNotificationSerdes storeNotificationSerdes = new StoreNotificationSerdes();
+        Map<String,Object> seredConfig = new HashMap<>();
+        seredConfig.put(JsonDeserializer.VALUE_CLASS_NAME_CONFIG,StoreNotification.class);
+        storeNotificationSerdes.configure(seredConfig,false);
+        return storeNotificationSerdes;
+    }
+    static final class StoreNotificationSerdes extends Serdes.WrapperSerde<StoreNotification>{
+
+        public StoreNotificationSerdes() {
+            super(new JsonSerializer<>(), new JsonDeserializer<>());
+        }
     }
 }

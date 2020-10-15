@@ -25,7 +25,7 @@ public class PosFanoutApp {
         KStream<String, PosInvoice> KS0 = builder.stream(AppConfigs.posTopicName,
             Consumed.with(AppSerdes.String(), AppSerdes.PosInvoice()));
 
-        KS0.filter((k, v) ->
+        /*KS0.filter((k, v) ->
             v.getDeliveryType().equalsIgnoreCase(AppConfigs.DELIVERY_TYPE_HOME_DELIVERY))
             .to(AppConfigs.shipmentTopicName, Produced.with(AppSerdes.String(), AppSerdes.PosInvoice()));
 
@@ -36,7 +36,10 @@ public class PosFanoutApp {
 
         KS0.mapValues(invoice -> RecordBuilder.getMaskedInvoice(invoice))
             .flatMapValues(invoice -> RecordBuilder.getHadoopRecords(invoice))
-            .to(AppConfigs.hadoopTopic, Produced.with(AppSerdes.String(), AppSerdes.HadoopRecord()));
+            .to(AppConfigs.hadoopTopic, Produced.with(AppSerdes.String(), AppSerdes.HadoopRecord()));*/
+
+        KS0.mapValues(invoice-> RecordBuilder.getStoreTotal(invoice))
+                .to(AppConfigs.storeTopic, Produced.with(AppSerdes.String(),AppSerdes.StoreNotification()));
 
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
         streams.start();
